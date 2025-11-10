@@ -2,7 +2,7 @@
 CXX = g++
 
 # Compilation flags
-CXXFLAGS = -Wall -fPIC  # Enable all warnings and generate position-independent code
+CXXFLAGS = -Wall -fPIC -g -O0 # Enable all warnings and generate position-independent code
 
 # Linking flags
 LIB_LDFLAGS = -shared   # Create a shared library

@@ -58,13 +58,12 @@ int main (int argc, char **argv) {
         cout << "[>] Enter command: ";
         getline(cin, line);
 
-        transform(line.begin(), line.end(), line.begin(),
-                  [](unsigned char c) { return tolower(c); });
-
         stringstream ss(line);
         string word;
 
         while (ss >> word) {
+            transform(word.begin(), word.end(), word.begin(),
+                      [](unsigned char c) { return tolower(c); });
             if ("r" == word || "receive" == word) {
                 zipc::msg rx_msg;
                 if (0 != msg_broker.receive_message(rx_msg)) {

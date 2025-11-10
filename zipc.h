@@ -38,7 +38,7 @@ void dump_msg(const msg& msg) {
         }
         cout << hex << setw(2) << setfill('0') << static_cast<unsigned int>(msg.data[i]) << " ";
     }
-    cout << endl;
+    cout << dec << endl;
 
 }
 
@@ -51,7 +51,7 @@ private:
 
     broker () {}
 
-    unique_ptr<message_queue> mq;
+    unique_ptr<message_queue> rx_mq;
     string id;
     mutex mtx;
 public:
