@@ -7,6 +7,8 @@
 #include <mutex>
 #include <memory>
 #include <atomic>
+#include <iostream>
+#include <iomanip>
 
 
 using namespace std;
@@ -24,6 +26,21 @@ struct __attribute__((packed)) msg {
     size_t data_size;
     byte data[max_data_size];
 };
+
+void dump_msg(const msg& msg) {
+    cout << "[zpic::msg] [sender]    : " << msg.sender << "\n"
+         << "[zipc::msg] [data size] : " << msg.data_size << "\n"
+         << "[zipc::msg] [data]      : ";
+
+    for (size_t i = 0; i < msg.data_size; i++) {
+        if (0 != i && 0 == i % 16) {
+            cout << "\n[zipc::msg] [data]      : ";
+        }
+        cout << hex << setw(2) << setfill('0') << static_cast<unsigned int>(msg.data[i]) << " ";
+    }
+    cout << endl;
+
+}
 
 static constexpr size_t max_msg_size  = sizeof (msg);
 static constexpr size_t max_msg_count = 100;
@@ -44,7 +61,7 @@ public:
     }
 
     int send_message (const string &id, msg &msg);
-    int receive_message (msg &msg);
+    int receive_message (msg &msg, bool blocking = true);
     int register_proc (const string &id);
     int deregister_proc ();
 };

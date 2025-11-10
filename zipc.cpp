@@ -36,17 +36,20 @@ int zipc::broker::send_message (const string &id, msg &msg) {
     return 0;
 }
 
-int zipc::broker::receive_message (zipc::msg &msg) {
+int zipc::broker::receive_message (zipc::msg &msg, bool blocking) {
     if (!this->mq)
         return -1;
 
     unsigned int priority;
     message_queue::size_type recvd_size;
 
-    bool ok = this->mq->try_receive(&msg, zipc::max_msg_size, recvd_size, priority);
-
-    if (!ok)
-        return -2;
+    if (!blocking) {
+        bool ok = this->mq->try_receive(&msg, zipc::max_msg_size, recvd_size, priority);
+        if (!ok)
+            return -2;
+    } else {
+        this->mq->receive(&msg, zipc::max_msg_size, recvd_size, priority);
+    }
 
     msg.data_size = recvd_size;
 
