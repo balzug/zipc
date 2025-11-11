@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -m
+
+coproc APP_A { ./app A > app_a.log.txt 2>&1; }
+PID_A=$!
+
+coproc APP_B { ./app B > app_b.log.txt 2>&1; }
+PID_B=$!
+
+echo "read" >&"${APP_A[1]}"
+sleep 1
+echo "send A 16" >&"${APP_B[1]}"
+sleep 1
+
+
+echo "quit" >&"${APP_A[1]}"
+sleep 1
+echo "quit" >&"${APP_B[1]}"
+sleep 1
+
