@@ -51,6 +51,8 @@ private:
 
     broker () {}
 
+    static string id_to_mq_name (const string &id);
+
     unique_ptr<message_queue> rx_mq;
     string id;
     mutex mtx;

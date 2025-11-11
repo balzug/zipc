@@ -8,7 +8,7 @@ using boost::interprocess::open_only;
 
 static const string mq_name_prefix = "zipc_rx_fifo_";
 
-
+//
 int zipc::broker::send_message (const string &id, msg &msg) {
     // If current process not registered -> return
     if (!this->rx_mq)
@@ -47,6 +47,7 @@ int zipc::broker::send_message (const string &id, msg &msg) {
     return 0;
 }
 
+//
 int zipc::broker::receive_message (zipc::msg &msg, bool blocking) {
     if (!this->rx_mq)
         return -1;
@@ -72,29 +73,45 @@ int zipc::broker::receive_message (zipc::msg &msg, bool blocking) {
     return 0;
 }
 
+//
 int zipc::broker::register_proc (const string &id) {
     lock_guard<mutex> lock(this->mtx);
 
     if (this->rx_mq)
         return -1;
 
-    this->id = id;
-
     // open or create an Rx message queue for current process
-    string mq_name = mq_name_prefix + id;
+    this->id = id;
+    string mq_name = zipc::broker::id_to_mq_name (this->id);
     cout << "[D] [zipc::broker::register_proc] mq_name    : " << mq_name.data() << endl;
     this->rx_mq = make_unique<message_queue> (open_or_create, mq_name.data(), zipc::max_msg_count, zipc::max_msg_size);
 
     return 0;
 }
 
+//
 int zipc::broker::deregister_proc () {
     lock_guard<mutex> lock(this->mtx);
 
+    string mq_name = zipc::broker::id_to_mq_name (this->id);
+    message_queue::remove(mq_name.data());
     this->id.clear();
     this->rx_mq.reset();
 
     return 0;
+}
+
+//
+string zipc::broker::id_to_mq_name (const string &id) {
+    string mq_name = mq_name_prefix;
+
+    if (id.length() >= zipc::max_id_len) {
+        mq_name += id.substr(0, zipc::max_id_len - 1);
+    } else {
+        mq_name += id;
+    }
+
+    return mq_name;
 }
 
 

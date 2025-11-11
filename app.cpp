@@ -105,6 +105,8 @@ int main (int argc, char **argv) {
         this_thread::sleep_for(chrono::milliseconds(100));
     } // while loop
 
+    msg_broker.deregister_proc();
+
     return 0;
 }
 
