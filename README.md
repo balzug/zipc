@@ -1,7 +1,7 @@
 # ZIPC README
 
 ZIPC provides local inter process communication in the form of the shared library `libzipc.so`.
-A process can registed/deregister itself (identified with a max 31 char long string) to the message borker `zipc::broker`.
+A process can register/deregister itself (identified with a max 31 char long string) to the message borker `zipc::broker`.
 ```C++
 #include "zipc.h"
 
@@ -13,7 +13,6 @@ Then it can send and reveive (blocking or non-blocking) messages.
 ```C++
 zipc::msg rx_msg;
 msg_broker.receive_message(rx_msg)
-
 ```
 
 ```C++
@@ -23,10 +22,11 @@ tx_msg.data_size = num;
 msg_broker.send_message(recipient_id, tx_msg);
 ```
 
-In the end, the process can deregiser itself and its Rx message queue is deleted.
-ZIPC uses `boost::interprocess::message_queue.`
+In the end, the process can deregister itself and then its Rx message queue is deleted.
 
 ## Build
+ZIPC uses `boost::interprocess::message_queue` so boost is required.
+
 ```shell
 $ make
 ```
@@ -52,9 +52,9 @@ When registered, an Rx messages queue is created for the process.
 There are three type of commands:
 ``` shell
  - receive 
-   Process is waiting for incomming message in its Rx message queue.
+   Current process is waiting for incomming message in its Rx message queue.
  - send <DEST_ID> <NUM>
-   Process sends NUM randomized bytes to process registered with DEST_ID.
+   Current process sends NUM randomized bytes to the process registered with DEST_ID.
  - quit
    Process quits.
 ```
