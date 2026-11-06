@@ -1,9 +1,3 @@
-/*
- * app.cpp
- *
- *  Created on: 2025. nov. 10.
- *      Author: user
- */
 #include <iostream>
 #include <string>
 #include <sstream>
